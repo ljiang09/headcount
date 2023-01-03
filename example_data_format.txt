@@ -1,0 +1,67 @@
+Wednesday: 48
+Thursday: 51
+Friday: 34
+===================
+Azuero, Emmeline 	1	1	0
+Azuero, Finn	1	1	0
+Balsam, Arlo	1	1	0
+Balsam, Hugh	1	1	0
+Barr, Abraham	0	1	0
+Binns, Oliver	1	0	0
+Burns, Jeremiah	1	1	1
+Carvalho, Roman	1	1	0
+Courville, Andrew	1	1	1
+Crayton-Garrison, Lilyan	1	1	0
+Engel, Aliza	1	1	1
+Engel, Aria	1	1	1
+Ferrone, Andrew	1	1	1
+Finley, Clark	1	1	1
+Finley, Keira	1	1	1
+Foresi, Julietta	1	1	0
+Hampton, Jack	0	1	0
+Kadosh Smith, Tevel Gabriel	1	1	1
+Krom, Andrew	1	1	1
+Krom, Victoria	1	1	1
+LaMay, Ethan	1	1	0
+Lamb, Thomas	1	1	1
+Looker, Cora	0	1	1
+MacDowell, Kalina	1	1	1
+Margalit, Eli	1	1	1
+Nastari , Madison 	1	1	0
+OConnell, WIlliam	1	1	1
+Parkinson, Graham	1	0	1
+Petrocca, Mia	1	1	1
+Regan, Stella	1	1	1
+Ryan, William	0	0	1
+Shadid, Ramzy	1	1	0
+Shah, Calder	1	1	1
+Singh, Vihaan	1	0	0
+Small, Tai	1	1	1
+Sproul, Dean	0	1	0
+Sproul, Maeve	0	1	0
+After School Total	31	33	21
+Champions Total	31	33	21
+Pre-Kindergarten			
+After School	 	 	 
+Barrett Pearson, Riley	1	1	1
+Miller, Kirby	1	1	1
+Carvalho, Rio	1	1	0
+Fairchild , Brooks 	1	1	1
+Finley, Daphne	1	1	1
+Gavin, Thomas	0	1	0
+Genung, Natalie	1	1	1
+LaMay, Vivian	1	1	0
+Lamson, Lillian	1	1	1
+McCusker, Maxwell	1	1	0
+Nguyen-Gould, Liem	1	1	1
+Nguyen-Gould, Lynha	1	1	1
+Parkinson, Callum	1	0	1
+Petrocca, Luca	1	1	1
+Pinch, Riley	1	1	0
+Ryan, Bree	0	0	0
+Sproul, Griffen	0	1	0
+Thunen, Leo	1	1	1
+Xiong, Zhenghan	1	1	1
+Xiong, Zhenghao	1	1	1
+After School Total	17	18	13
+Pre-Kindergarten Total	17	18	13
