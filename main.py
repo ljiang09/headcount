@@ -50,8 +50,32 @@ def readData():
 				preKGroup.append(line)
 				i += 1
 
-	print(olderGroup)
-	print(preKGroup)
+	# some counting verification stuff here
+	for i in range(len(totals)):
+		if int(olderTotals[i]) + int(preKTotals[i]) != int(totals[i][1]):
+			print("The totals are wrong for", totals[i][0])
+
+	print("*************** OLDER GROUP ***************")
+	print("Names", end ="\t\t")
+	for i in range(len(totals)):
+		print(totals[i][0], end ="\t")
+	print()
+
+	for kid in olderGroup:
+		for val in kid:
+			print(val, end ="\t")
+		print()
+
+	print("************** YOUNGER GROUP **************")
+	print("Names", end ="\t\t")
+	for i in range(len(totals)):
+		print(totals[i][0], end ="\t")
+	print()
+	
+	for kid in preKGroup:
+		for val in kid:
+			print(val, end ="\t")
+		print()
 
 
 
