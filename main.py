@@ -57,18 +57,21 @@ def readData():
 		if int(olderTotals[i]) + int(preKTotals[i]) != int(totals[i][1]):
 			print("The totals are wrong for", totals[i][0])
 
+	writeToSheets(totals, olderGroup, preKGroup)
 
-	# stuff for writing to excel sheet
-	wb = Workbook()
 
-	# print("*************** OLDER GROUP ***************")
-	writeToSheet(totals, olderGroup, 1, "01/04/23", wb, "OlderGroup")
-	# printDailyKids(totals, olderGroup)
-	# printAll(totals, olderGroup)
+def writeToSheets(totals, olderGroup, preKGroup):
+	# do each day for older and pre-k kids separately
+	wbOlder = Workbook()
+	wbPreK = Workbook()
+	for i in range(len(totals)):
+		# TODO: figure out how to increment the date
+		writeToSheet(totals, olderGroup, i, "01/04/23", wbOlder, "OlderGroup")
+		writeToSheet(totals, preKGroup, i, "01/04/23", wbPreK, "PreKGroup")
 
-	# print("************** YOUNGER GROUP **************")
-	# printDailyKids(totals, preKGroup)
-	# printAll(totals, preKGroup)
+	wbOlder.save('OlderGroup.xls')
+	wbPreK.save('PreKGroup.xls')
+
 
 
 def writeToSheet(totals, group, day, date, wb, sheetName):
@@ -79,7 +82,7 @@ def writeToSheet(totals, group, day, date, wb, sheetName):
 		day: an int representing the index of the day that the sheet is detailing
 		wb: the Workbook object, used for writing to a sheet
 	'''
-	sheet1 = wb.add_sheet('Sheet 1')
+	sheet1 = wb.add_sheet(f'{sheetName}_{totals[day][0]}')
 
 	# title/info
 	sheet1.write(0, 0, totals[day][0])
@@ -112,12 +115,13 @@ def writeToSheet(totals, group, day, date, wb, sheetName):
 			# write counter number in
 			sheet1.write(i, 4, i-2)
 
+			# write kid names in
 			sheet1.write(i, 5, kid[0].strip().split(", ")[0])
 			sheet1.write(i, 6, kid[0].strip().split(", ")[1])
 
 			i += 1
 
-	wb.save(f'{sheetName}_{totals[day][0]}.xls')
+
 
 def getTime(i):
 	'''
@@ -145,6 +149,7 @@ def getTime(i):
 	return ""
 
 
+
 def printDailyKids(totals, group):
 	'''
 	For either the preK or older group, prints kids attending for each day
@@ -161,6 +166,8 @@ def printDailyKids(totals, group):
 				print(kid[0].strip().split(", ")[0], end ="\t")
 				print(kid[0].strip().split(", ")[1])
 
+
+
 def printAll(totals, group):
 	print("Names", end ="\t\t")
 	for i in range(len(totals)):
@@ -173,21 +180,17 @@ def printAll(totals, group):
 		print()
 
 
+
 def readDataNp():
 	'''
 	Reads in a text file, parses it into numpy arrays
 	'''
-	lines = []
-	with open('headcount_data.txt') as f:
-		lines = f.readlines()
-
-	lines = np.array(lines)
-
-	print(lines)
-	# replace all tabs with comma? or directly convert to np array?
-
-	# arr columns: last name, first name, day 1, day 2, day 3, .......
+	pass
 
 
 
 readData()
+
+
+
+
