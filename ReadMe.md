@@ -2,7 +2,7 @@
 
 This project automates filling out part of the headcount sheets for the Champions program at Eliot Upper.
 
-The script can fill out all the sheets for 1 week.
+The script can fill out all the sheets for 1 week. It generates two files: one for Pre-K and one for Grade school kids. Each file has a sheet for each day.
 
 ## How to use:
 
