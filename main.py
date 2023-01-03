@@ -55,29 +55,42 @@ def readData():
 		if int(olderTotals[i]) + int(preKTotals[i]) != int(totals[i][1]):
 			print("The totals are wrong for", totals[i][0])
 
-	print("*************** OLDER GROUP ***************")
-	print("Names", end ="\t\t")
-	for i in range(len(totals)):
-		print(totals[i][0], end ="\t")
-	print()
 
-	for kid in olderGroup:
-		for val in kid:
-			print(val, end ="\t")
-		print()
+	print("*************** OLDER GROUP ***************")
+	printDailyKids(totals, olderGroup)
+	# printAll(totals, olderGroup)
 
 	print("************** YOUNGER GROUP **************")
+	printDailyKids(totals, youngerGroup)
+	# printAll(totals, youngerGroup)
+
+
+def printDailyKids(totals, group):
+	'''
+	For either the preK or older group, prints kids attending for each day
+
+	Args:
+		totals: an array representing the days and total kids. Needed for the days
+		group: an array representing all the kids in either the pre k or older group
+	'''
+	for i in range(len(totals)):
+		day = totals[i][0]
+		print(f"*************** {day} ***************")
+		for kid in group:
+			if kid[i+1] == "1":
+				print(kid[0].strip().split(", ")[0], end ="\t")
+				print(kid[0].strip().split(", ")[1])
+
+def printAll(totals, group):
 	print("Names", end ="\t\t")
 	for i in range(len(totals)):
 		print(totals[i][0], end ="\t")
 	print()
-	
-	for kid in preKGroup:
+
+	for kid in group:
 		for val in kid:
 			print(val, end ="\t")
 		print()
-
-
 
 
 def readDataNp():
