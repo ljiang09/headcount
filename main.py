@@ -18,17 +18,40 @@ def readData():
 		day = day.split(": ")
 		totals.append(day)
 		i += 1
+
 	lines = lines[i+1::]
 
-	print(lines)
+	olderGroup = []
+	preKGroup = []
+	olderTotals = []
+	preKTotals = []
 
-	for i, line in enumerate(lines):
-		line = line.strip()
+	group1 = True
+
+	i = 0
+	while i < len(lines):
+		line = lines[i].strip()
 		line = line.split("\t")
-		# if len(line) > numDays:
-		lines[i] = line
+		if group1:
+			if "Total" in line[0]:
+				# store the older kid totals for verification, and skip ahead to the next section
+				olderTotals = line[1::]
+				group1 = False
+				i += 4
+			else:
+				olderGroup.append(line)
+				i += 1
+		else:
+			if "Total" in line[0]:
+				# store the younger kid totals for verification, break
+				preKTotals = line[1::]
+				break
+			else:
+				preKGroup.append(line)
+				i += 1
 
-	# print(lines)
+	print(olderGroup)
+	print(preKGroup)
 
 
 
