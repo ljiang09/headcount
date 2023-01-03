@@ -106,12 +106,43 @@ def writeToSheet(totals, group, day, date, wb, sheetName):
 	i = 3
 	for kid in group:
 		if kid[day+1] == "1":
+			# write time block in
+			sheet1.write(i, 0, getTime(i))
+
+			# write counter number in
+			sheet1.write(i, 4, i-2)
+
 			sheet1.write(i, 5, kid[0].strip().split(", ")[0])
 			sheet1.write(i, 6, kid[0].strip().split(", ")[1])
+
 			i += 1
 
 	wb.save(f'{sheetName}_{totals[day][0]}.xls')
 
+def getTime(i):
+	'''
+	helper function to get a string representing a time increment
+
+	args:
+		i: an int representing the row being written to
+	'''
+	if i < 29:
+		s = f"{(6 + ((i-3) // 2))%12}:"
+
+		if (6 + ((i-3) // 2)) == 12:
+			s = "12:"
+
+		if i%2 == 0:
+			s += ("30")
+		else:
+			s += ("00")
+
+		if i < 15:
+			s += (" am")
+		else:
+			s += (" pm")
+		return s
+	return ""
 
 
 def printDailyKids(totals, group):
