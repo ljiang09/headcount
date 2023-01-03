@@ -61,8 +61,8 @@ def readData():
 	# stuff for writing to excel sheet
 	wb = Workbook()
 
-	print("*************** OLDER GROUP ***************")
-	writeToSheet(totals, olderGroup, 1, wb, "OlderGroup")
+	# print("*************** OLDER GROUP ***************")
+	writeToSheet(totals, olderGroup, 1, "01/04/23", wb, "OlderGroup")
 	# printDailyKids(totals, olderGroup)
 	# printAll(totals, olderGroup)
 
@@ -71,7 +71,7 @@ def readData():
 	# printAll(totals, preKGroup)
 
 
-def writeToSheet(totals, group, day, wb, sheetName):
+def writeToSheet(totals, group, day, date, wb, sheetName):
 	'''
 	Writes one day's worth of kids into 1 sheet
 
@@ -80,14 +80,34 @@ def writeToSheet(totals, group, day, wb, sheetName):
 		wb: the Workbook object, used for writing to a sheet
 	'''
 	sheet1 = wb.add_sheet('Sheet 1')
+
+	# title/info
 	sheet1.write(0, 0, totals[day][0])
-	sheet1.write(1, 0, "Last Name")
-	sheet1.write(1, 1, "First Name")
-	i = 2
+	sheet1.write(0, 1, "Site Name: Eliot Upper")
+	sheet1.write(0, 2, "Site Number: 1638")
+	sheet1.write(0, 3, f"Date: {date}")
+
+	# row 1
+	sheet1.write(2, 0, "TIME")
+	sheet1.write(2, 1, "# OF STUDENTS")
+	sheet1.write(2, 2, "# OF STAFF")
+	sheet1.write(2, 3, "STAFF SIGNATURE (person conducting head count)")
+	sheet1.write(2, 5, "CHILD'S LAST NAME")
+	sheet1.write(2, 6, "CHILD'S FIRST NAME")
+	sheet1.write(2, 7, "ARRIVAL TIME")
+	sheet1.write(2, 8, "TIME OUT")
+	sheet1.write(2, 9, "LOCATION")
+	sheet1.write(2, 10, "TIME IN")
+	sheet1.write(2, 11, "TIME OUT")
+	sheet1.write(2, 12, "LOCATION")
+	sheet1.write(2, 13, "TIME IN")
+	sheet1.write(2, 14, "FINAL DEPARTURE TIME")
+
+	i = 3
 	for kid in group:
 		if kid[day+1] == "1":
-			sheet1.write(i, 0, kid[0].strip().split(", ")[0])
-			sheet1.write(i, 1, kid[0].strip().split(", ")[1])
+			sheet1.write(i, 5, kid[0].strip().split(", ")[0])
+			sheet1.write(i, 6, kid[0].strip().split(", ")[1])
 			i += 1
 
 	wb.save(f'{sheetName}_{totals[day][0]}.xls')
