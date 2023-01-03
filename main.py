@@ -1,3 +1,5 @@
+import xlwt
+from xlwt import Workbook
 import numpy as np
 
 
@@ -56,13 +58,40 @@ def readData():
 			print("The totals are wrong for", totals[i][0])
 
 
+	# stuff for writing to excel sheet
+	wb = Workbook()
+
 	print("*************** OLDER GROUP ***************")
-	printDailyKids(totals, olderGroup)
+	writeToSheet(totals, olderGroup, 1, wb, "OlderGroup")
+	# printDailyKids(totals, olderGroup)
 	# printAll(totals, olderGroup)
 
-	print("************** YOUNGER GROUP **************")
-	printDailyKids(totals, youngerGroup)
-	# printAll(totals, youngerGroup)
+	# print("************** YOUNGER GROUP **************")
+	# printDailyKids(totals, preKGroup)
+	# printAll(totals, preKGroup)
+
+
+def writeToSheet(totals, group, day, wb, sheetName):
+	'''
+	Writes one day's worth of kids into 1 sheet
+
+	Args:
+		day: an int representing the index of the day that the sheet is detailing
+		wb: the Workbook object, used for writing to a sheet
+	'''
+	sheet1 = wb.add_sheet('Sheet 1')
+	sheet1.write(0, 0, totals[day][0])
+	sheet1.write(1, 0, "Last Name")
+	sheet1.write(1, 1, "First Name")
+	i = 2
+	for kid in group:
+		if kid[day+1] == "1":
+			sheet1.write(i, 0, kid[0].strip().split(", ")[0])
+			sheet1.write(i, 1, kid[0].strip().split(", ")[1])
+			i += 1
+
+	wb.save(f'{sheetName}_{totals[day][0]}.xls')
+
 
 
 def printDailyKids(totals, group):
