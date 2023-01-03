@@ -4,6 +4,11 @@ import numpy as np
 
 
 
+# TODO list:
+# increment date for each sheet
+# add formatting to each cell
+
+
 def readData():
 	'''
 	Reads in a text file, parses it into regular 2x2 array

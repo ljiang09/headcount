@@ -41,4 +41,5 @@ If you need an example of how to format the entire file, look at [`example_data_
 
 ## Run Python script
 
-Now, you can finally run the python script and generate Excel files for each day. In the command line, navigate to the folder where this ReadMe file is stored. Then, type `python main.py` and press enter, and see the newly-generated Excel sheets!
+Now, you can finally run the python script and generate Excel files for each day. In the command line, navigate to the folder where this ReadMe file is stored. Then, type either `python main.py` or `python3 main.py`, press enter, and see the newly-generated Excel sheets!
+
