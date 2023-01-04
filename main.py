@@ -1,6 +1,7 @@
 import xlwt
 from xlwt import Workbook
 import numpy as np
+import datetime
 
 
 
@@ -16,6 +17,10 @@ def readData():
 	lines = []
 	with open('headcount_data.txt') as f:
 		lines = f.readlines()
+
+	# get start date info
+	startDate = lines[0].split(": ")[1]
+	lines = lines[2::]
 
 	# get totals info
 	totals = []
@@ -62,20 +67,31 @@ def readData():
 		if int(olderTotals[i]) + int(preKTotals[i]) != int(totals[i][1]):
 			print("The totals are wrong for", totals[i][0])
 
-	writeToSheets(totals, olderGroup, preKGroup)
+	writeToSheets(totals, olderGroup, preKGroup, startDate)
 
 
-def writeToSheets(totals, olderGroup, preKGroup):
+def writeToSheets(totals, olderGroup, preKGroup, startDate):
 	# do each day for older and pre-k kids separately
 	wbOlder = Workbook()
 	wbPreK = Workbook()
+
+	currDay = startDate
+
 	for i in range(len(totals)):
-		# TODO: figure out how to increment the date
-		writeToSheet(totals, olderGroup, i, "01/04/23", wbOlder, "OlderGroup")
-		writeToSheet(totals, preKGroup, i, "01/04/23", wbPreK, "PreKGroup")
+		writeToSheet(totals, olderGroup, i, currDay, wbOlder, "OlderGroup")
+		writeToSheet(totals, preKGroup, i, currDay, wbPreK, "PreKGroup")
+		currDay = getNextDay(currDay)
 
 	wbOlder.save('OlderGroup.xls')
 	wbPreK.save('PreKGroup.xls')
+
+
+def getNextDay(prevDay):
+	prevDay = prevDay.split("/")
+
+	date = datetime.datetime(int(f"20{prevDay[2]}"), int(prevDay[0]), int(prevDay[1]))
+	date += datetime.timedelta(days=1)
+	return date.strftime("%m/%d/%y")
 
 
 
