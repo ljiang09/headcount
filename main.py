@@ -129,6 +129,17 @@ def writeToSheet(totals, group, day, wb, sheetName):
 	'''
 	sheet1 = wb.add_sheet(f'{sheetName}_{totals[day][0]}')
 
+	# change cell sizes for the sheet
+	sheet1.col(0).width = 500
+	sheet1.col(4).width = 5000
+	sheet1.col(5).width = 750
+	sheet1.col(6).width = 5000
+	sheet1.col(8).width = 2500
+	sheet1.row(4).height = 300
+	sheet1.row(6).height = 300
+	sheet1.row(7).height = 2500
+
+
 	# title/info
 	sheet1.write(4, 7, totals[day][0])
 	sheet1.write(5, 7, "Site Name: Eliot Upper")
