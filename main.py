@@ -2,11 +2,12 @@ import xlwt
 from xlwt import Workbook
 import numpy as np
 import datetime
+import shutil
+
 
 
 
 # TODO list:
-# increment date for each sheet
 # add formatting to each cell
 
 
@@ -18,7 +19,7 @@ def readData():
 	with open('headcount_data.txt') as f:
 		lines = f.readlines()
 
-	# get start date info
+	# get sunday date info
 	startDate = lines[0].split(": ")[1]
 	lines = lines[2::]
 
@@ -70,34 +71,57 @@ def readData():
 	writeToSheets(totals, olderGroup, preKGroup, startDate)
 
 
-def writeToSheets(totals, olderGroup, preKGroup, startDate):
+def writeToSheets(totals, olderGroup, preKGroup, sundayDate):
+	# TODO: make copy of spreadsheet with formatting
+	# I can't figure out how to make multiple sheets with the same formatting so can't use this
+	# rb = open_workbook("names.xls")
+	# wb = copy(rb)
+
+	# s = wb.get_sheet(0)
+	# s.write(0,0,'A1')
+	# wb.save('names.xls')
+	
+
+	# FORMAT AS YOU GO
 	# do each day for older and pre-k kids separately
 	wbOlder = Workbook()
 	wbPreK = Workbook()
 
-	currDay = startDate
+	# get the dates of each of the days for the headcount sheets
+	for day in totals:
+		if day[0] == "Monday":
+			day.append(getNextDay(sundayDate, 1))
+		elif day[0] == "Tuesday":
+			day.append(getNextDay(sundayDate, 2))
+		elif day[0] == "Wednesday":
+			day.append(getNextDay(sundayDate, 3))
+		elif day[0] == "Thursday":
+			day.append(getNextDay(sundayDate, 4))
+		elif day[0] == "Friday":
+			day.append(getNextDay(sundayDate, 5))
+
 
 	for i in range(len(totals)):
-		writeToSheet(totals, olderGroup, i, currDay, wbOlder, "OlderGroup")
-		writeToSheet(totals, preKGroup, i, currDay, wbPreK, "PreKGroup")
-		currDay = getNextDay(currDay)
+		writeToSheet(totals, olderGroup, i, wbOlder, "OlderGroup")
+		writeToSheet(totals, preKGroup, i, wbPreK, "PreKGroup")
 
 	wbOlder.save('OlderGroup.xls')
 	wbPreK.save('PreKGroup.xls')
 
 
-def getNextDay(prevDay):
+
+def getNextDay(prevDay, numDaysLater):
 	prevDay = prevDay.split("/")
 
 	date = datetime.datetime(int(f"20{prevDay[2]}"), int(prevDay[0]), int(prevDay[1]))
-	date += datetime.timedelta(days=1)
+	date += datetime.timedelta(days=numDaysLater)
 	return date.strftime("%m/%d/%y")
 
 
 
-def writeToSheet(totals, group, day, date, wb, sheetName):
+def writeToSheet(totals, group, day, wb, sheetName):
 	'''
-	Writes one day's worth of kids into 1 sheet
+	Writes one day's worth of kids into 1 sheet, with formatting
 
 	Args:
 		day: an int representing the index of the day that the sheet is detailing
@@ -106,39 +130,37 @@ def writeToSheet(totals, group, day, date, wb, sheetName):
 	sheet1 = wb.add_sheet(f'{sheetName}_{totals[day][0]}')
 
 	# title/info
-	sheet1.write(0, 0, totals[day][0])
-	sheet1.write(0, 1, "Site Name: Eliot Upper")
-	sheet1.write(0, 2, "Site Number: 1638")
-	sheet1.write(0, 3, f"Date: {date}")
+	sheet1.write(4, 7, totals[day][0])
+	sheet1.write(5, 7, "Site Name: Eliot Upper")
+	sheet1.write(5, 10, "Site Number: 1638")
+	sheet1.write(5, 13, f"Date: {totals[day][2]}")
 
 	# row 1
-	sheet1.write(2, 0, "TIME")
-	sheet1.write(2, 1, "# OF STUDENTS")
-	sheet1.write(2, 2, "# OF STAFF")
-	sheet1.write(2, 3, "STAFF SIGNATURE (person conducting head count)")
-	sheet1.write(2, 5, "CHILD'S LAST NAME")
-	sheet1.write(2, 6, "CHILD'S FIRST NAME")
-	sheet1.write(2, 7, "ARRIVAL TIME")
-	sheet1.write(2, 8, "TIME OUT")
-	sheet1.write(2, 9, "LOCATION")
-	sheet1.write(2, 10, "TIME IN")
-	sheet1.write(2, 11, "TIME OUT")
-	sheet1.write(2, 12, "LOCATION")
-	sheet1.write(2, 13, "TIME IN")
-	sheet1.write(2, 14, "FINAL DEPARTURE TIME")
+	sheet1.write(7, 1, "TIME")
+	sheet1.write(7, 2, "# OF STAFF")
+	sheet1.write(7, 3, "# OF STUDENTS")
+	sheet1.write(7, 4, "STAFF SIGNATURE (person conducting head count)")
+	sheet1.write(7, 6, "CHILD'S FULL NAME")
+	sheet1.write(7, 7, "ARRIVAL TIME")
+	sheet1.write(7, 8, "TIME OUT")
+	sheet1.write(7, 9, "LOCATION")
+	sheet1.write(7, 10, "TIME IN")
+	sheet1.write(7, 11, "TIME OUT")
+	sheet1.write(7, 12, "LOCATION")
+	sheet1.write(7, 13, "TIME IN")
+	sheet1.write(7, 14, "FINAL DEPARTURE TIME")
 
-	i = 3
+	i = 8
 	for kid in group:
 		if kid[day+1] == "1":
 			# write time block in
-			sheet1.write(i, 0, getTime(i))
+			sheet1.write(i, 1, getTime(i-5))
 
 			# write counter number in
-			sheet1.write(i, 4, i-2)
+			sheet1.write(i, 5, i-7)
 
 			# write kid names in
-			sheet1.write(i, 5, kid[0].strip().split(", ")[0])
-			sheet1.write(i, 6, kid[0].strip().split(", ")[1])
+			sheet1.write(i, 6, kid[0])
 
 			i += 1
 
@@ -163,9 +185,9 @@ def getTime(i):
 			s += ("00")
 
 		if i < 15:
-			s += (" am")
+			s += (" AM")
 		else:
-			s += (" pm")
+			s += (" PM")
 		return s
 	return ""
 

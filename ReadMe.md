@@ -32,7 +32,9 @@ If you are using the newer version of Python (Python 3), replace `pip` with `pip
 
 To generate headcount sheets for the week, you need to update the text file that stores all the data. This is found in [`headcount_data.txt`](https://github.com/ljiang09/headcount/blob/main/headcount_data.txt).
 
-If you look in [`headcount_data.txt`](https://github.com/ljiang09/headcount/blob/main/headcount_data.txt), you'll see a horizontal line `===================` near the top. Above all this line, you need to copy and paste the daily totals in the format `Wednesday: 48`.
+If you look in [`headcount_data.txt`](https://github.com/ljiang09/headcount/blob/main/headcount_data.txt), you'll see a horizontal line `===================` near the top. Above this line, you need to state the date of the week's Sunday. This should be in the format `mm/dd/yy`.
+
+There is a second horizontal line. Above this line, you need to copy and paste the daily totals in the format `Wednesday: 48`. Each day gets its own line.
 
 Below this, you can copy and paste everything from the table sent in the weekly email, straight as it is.
 
