@@ -1,8 +1,10 @@
-import xlwt
-from xlwt import Workbook
+import openpyxl
+from openpyxl.styles import Font
+from openpyxl.styles import Alignment
 import numpy as np
 import datetime
 import shutil
+import string
 
 
 
@@ -84,8 +86,8 @@ def writeToSheets(totals, olderGroup, preKGroup, sundayDate):
 
 	# FORMAT AS YOU GO
 	# do each day for older and pre-k kids separately
-	wbOlder = Workbook()
-	wbPreK = Workbook()
+	wbOlder = openpyxl.Workbook()
+	wbPreK = openpyxl.Workbook()
 
 	# get the dates of each of the days for the headcount sheets
 	for day in totals:
@@ -102,11 +104,12 @@ def writeToSheets(totals, olderGroup, preKGroup, sundayDate):
 
 
 	for i in range(len(totals)):
+		# TODO: if i == 0, use the current sheet. else, make a new sheet
 		writeToSheet(totals, olderGroup, i, wbOlder, "OlderGroup")
 		writeToSheet(totals, preKGroup, i, wbPreK, "PreKGroup")
 
-	wbOlder.save('OlderGroup.xls')
-	wbPreK.save('PreKGroup.xls')
+	wbOlder.save('OlderGroup.xlsx')
+	wbPreK.save('PreKGroup.xlsx')
 
 
 
@@ -127,53 +130,86 @@ def writeToSheet(totals, group, day, wb, sheetName):
 		day: an int representing the index of the day that the sheet is detailing
 		wb: the Workbook object, used for writing to a sheet
 	'''
-	sheet1 = wb.add_sheet(f'{sheetName}_{totals[day][0]}')
+	sheet1 = wb.create_sheet(f'{sheetName}_{totals[day][0]}')
 
-	# change cell sizes for the sheet
-	sheet1.col(0).width = 500
-	sheet1.col(4).width = 5000
-	sheet1.col(5).width = 750
-	sheet1.col(6).width = 5000
-	sheet1.col(8).width = 2500
-	sheet1.row(4).height = 300
-	sheet1.row(6).height = 300
-	sheet1.row(7).height = 2500
+	styleCells(sheet1, totals, day)
 
-
-	# title/info
-	sheet1.write(4, 7, totals[day][0])
-	sheet1.write(5, 7, "Site Name: Eliot Upper")
-	sheet1.write(5, 10, "Site Number: 1638")
-	sheet1.write(5, 13, f"Date: {totals[day][2]}")
-
-	# row 1
-	sheet1.write(7, 1, "TIME")
-	sheet1.write(7, 2, "# OF STAFF")
-	sheet1.write(7, 3, "# OF STUDENTS")
-	sheet1.write(7, 4, "STAFF SIGNATURE (person conducting head count)")
-	sheet1.write(7, 6, "CHILD'S FULL NAME")
-	sheet1.write(7, 7, "ARRIVAL TIME")
-	sheet1.write(7, 8, "TIME OUT")
-	sheet1.write(7, 9, "LOCATION")
-	sheet1.write(7, 10, "TIME IN")
-	sheet1.write(7, 11, "TIME OUT")
-	sheet1.write(7, 12, "LOCATION")
-	sheet1.write(7, 13, "TIME IN")
-	sheet1.write(7, 14, "FINAL DEPARTURE TIME")
-
-	i = 8
+	i = 9
 	for kid in group:
 		if kid[day+1] == "1":
 			# write time block in
-			sheet1.write(i, 1, getTime(i-5))
+			# sheet1.write(i, 1, getTime(i-5))
+			sheet1[f'B{i}'] = getTime(i-5)
 
 			# write counter number in
-			sheet1.write(i, 5, i-7)
+			# sheet1.write(i, 5, i-7)
+			sheet1[f'F{i}'] = i-8
 
 			# write kid names in
-			sheet1.write(i, 6, kid[0])
+			# sheet1.write(i, 6, kid[0])
+			sheet1[f'G{i}'] = kid[0]
 
 			i += 1
+
+
+
+def styleCells(sheet1, totals, day):
+	'''
+	Sets column/row sizes, fills out header sections, bolds header cells
+	'''
+	# change cell sizes for the sheet
+	sheet1.column_dimensions['A'].width = 2
+	sheet1.column_dimensions['B'].width = 10
+	sheet1.column_dimensions['C'].width = 7
+	sheet1.column_dimensions['D'].width = 10
+	sheet1.column_dimensions['E'].width = 18
+	sheet1.column_dimensions['F'].width = 3
+	sheet1.column_dimensions['G'].width = 17
+	sheet1.column_dimensions['H'].width = 13
+	sheet1.column_dimensions['I'].width = 11
+	sheet1.column_dimensions['J'].width = 11
+	sheet1.column_dimensions['K'].width = 11
+	sheet1.column_dimensions['L'].width = 11
+	sheet1.column_dimensions['M'].width = 11
+	sheet1.column_dimensions['N'].width = 11
+	sheet1.column_dimensions['O'].width = 11
+	sheet1.column_dimensions['P'].width = 15
+	sheet1.row_dimensions[5].height = 5
+	sheet1.row_dimensions[7].height = 5
+	sheet1.row_dimensions[8].height = 50
+
+	# title/info
+	sheet1['I4'] = totals[day][0]
+	sheet1['I6'] = "Site Name: Eliot Upper"
+	sheet1['L6'] = "Site Number: 1638"
+	sheet1['P6'] = f"Date: {totals[day][2]}"
+
+	# row 1
+	sheet1['B8'] = "TIME"
+	sheet1['C8'] = "# OF STAFF"
+	sheet1['D8'] = "# OF STUDENTS"
+	sheet1['E8'] = "STAFF SIGNATURE (person conducting head count)"
+	sheet1['G8'] = "CHILD'S FULL NAME (Last Name, First Name)"
+	sheet1['H8'] = "ARRIVAL TIME"
+	sheet1['I8'] = "TIME OUT"
+	sheet1['J8'] = "LOCATION"
+	sheet1['K8'] = "TIME IN"
+	sheet1['L8'] = "TIME OUT"
+	sheet1['M8'] = "LOCATION"
+	sheet1['N8'] = "TIME IN"
+	sheet1['O8'] = "FINAL DEPARTURE TIME"
+
+	# bold everything for the header
+	for i in range(len(string.ascii_uppercase))[1:16]:
+		sheet1[f'{string.ascii_uppercase[i]}8'].font = Font(bold=True)
+		sheet1[f'{string.ascii_uppercase[i]}8'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+
+	sheet1['N2'] = "Child Head Count"
+	sheet1['N2'].font = Font(bold=True, size=22)
+	sheet1['N2'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+	sheet1.merge_cells('N2:P3')
+
+
 
 
 
