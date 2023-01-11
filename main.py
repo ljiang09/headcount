@@ -26,34 +26,7 @@ def read_data(fileName):
 	(totals, i) = get_totals_info(lines)
 	lines = lines[i+1::]
 
-	olderGroup = []
-	preKGroup = []
-	olderTotals = []
-	preKTotals = []
-
-	group1 = True
-
-	i = 0
-	while i < len(lines):
-		line = lines[i].strip()
-		line = line.split("\t")
-		if group1:
-			if "Total" in line[0]:
-				# store the older kid totals for verification, and skip ahead to the next section
-				olderTotals = line[1::]
-				group1 = False
-				i += 4
-			else:
-				olderGroup.append(line)
-				i += 1
-		else:
-			if "Total" in line[0]:
-				# store the younger kid totals for verification, break
-				preKTotals = line[1::]
-				break
-			else:
-				preKGroup.append(line)
-				i += 1
+	(olderGroup, preKGroup, olderTotals, preKTotals) = get_groups(lines)
 
 	verify_totals(totals, olderTotals, preKTotals)
 
@@ -94,6 +67,38 @@ def verify_totals(totals, olderTotals, preKTotals):
 		if int(olderTotals[i]) + int(preKTotals[i]) != int(totals[i][1]):
 			raise Exception("The totals are wrong for", totals[i][0])
 
+
+def get_groups(lines):
+	group1 = True
+
+	olderGroup = []
+	preKGroup = []
+	olderTotals = []
+	preKTotals = []
+
+	i = 0
+	while i < len(lines):
+		line = lines[i].strip()
+		line = line.split("\t")
+		if group1:
+			if "Total" in line[0]:
+				# store the older kid totals for verification, and skip ahead to the next section
+				olderTotals = line[1::]
+				group1 = False
+				i += 4
+			else:
+				olderGroup.append(line)
+				i += 1
+		else:
+			if "Total" in line[0]:
+				# store the younger kid totals for verification, break
+				preKTotals = line[1::]
+				break
+			else:
+				preKGroup.append(line)
+				i += 1
+
+	return (olderGroup, preKGroup, olderTotals, preKTotals)
 
 
 def writeToSheets(days, olderTotals, preKTotals, olderGroup, preKGroup, sundayDate):
