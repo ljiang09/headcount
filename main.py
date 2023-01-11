@@ -23,8 +23,8 @@ def read_data(fileName):
 	lines = lines[2::]
 
 	# get totals info
-	(totals, i) = get_totals_info(lines)
-	lines = lines[i+1::]
+	totals = get_totals_info(lines)
+	lines = lines[len(totals)+1::]
 
 	(olderGroup, preKGroup, olderTotals, preKTotals) = get_groups(lines)
 
@@ -49,7 +49,10 @@ def get_totals_info(lines):
 		day = day.split(": ")
 		totals.append(day)
 		i += 1
-	return (totals, i)
+		if i >= len(lines):
+			raise Exception("No horizontal line break found (looks like `========`). Likely cause: text file is formatted incorrectly.")
+
+	return totals
 
 
 
