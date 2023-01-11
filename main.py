@@ -126,15 +126,15 @@ def writeToSheets(days, olderTotals, preKTotals, olderGroup, preKGroup, sundayDa
 	# get the dates of each of the days for the headcount sheets
 	for day in days:
 		if day[0] == "Monday":
-			day.append(getNextDay(sundayDate, 1))
+			day.append(get_next_day(sundayDate, 1))
 		elif day[0] == "Tuesday":
-			day.append(getNextDay(sundayDate, 2))
+			day.append(get_next_day(sundayDate, 2))
 		elif day[0] == "Wednesday":
-			day.append(getNextDay(sundayDate, 3))
+			day.append(get_next_day(sundayDate, 3))
 		elif day[0] == "Thursday":
-			day.append(getNextDay(sundayDate, 4))
+			day.append(get_next_day(sundayDate, 4))
 		elif day[0] == "Friday":
-			day.append(getNextDay(sundayDate, 5))
+			day.append(get_next_day(sundayDate, 5))
 
 
 	for i in range(len(days)):
@@ -150,7 +150,7 @@ def writeToSheets(days, olderTotals, preKTotals, olderGroup, preKGroup, sundayDa
 
 
 
-def getNextDay(prevDay, numDaysLater):
+def get_next_day(prevDay, numDaysLater):
 	'''
 	Gets a date in mm/dd/yy string format.
 
@@ -226,36 +226,6 @@ def writeToSheet(days, totals, group, day, wb, sheetName):
 					sheet2[f'G{i-26}'] = kiddo[0]
 					i += 1
 			break
-
-
-
-
-
-def getTime(i):
-	'''
-	Helper function to get a string representing a time increment.
-	Used for writing to the "Time" column in the spreadsheet
-
-	Args:
-		i: an int representing the row being written to
-	'''
-	if i < 29:
-		s = f"{(6 + ((i-3) // 2))%12}:"
-
-		if (6 + ((i-3) // 2)) == 12:
-			s = "12:"
-
-		if i%2 == 0:
-			s += ("30")
-		else:
-			s += ("00")
-
-		if i < 15:
-			s += (" AM")
-		else:
-			s += (" PM")
-		return s
-	return ""
 
 
 
