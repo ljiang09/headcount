@@ -63,11 +63,25 @@ def readData():
 		if int(olderTotals[i]) + int(preKTotals[i]) != int(totals[i][1]):
 			print("The totals are wrong for", totals[i][0])
 
+	print(olderGroup)
 	writeToSheets(totals, olderTotals, preKTotals, olderGroup, preKGroup, startDate)
 
 
 def writeToSheets(days, olderTotals, preKTotals, olderGroup, preKGroup, sundayDate):
-	# copy files for templace
+	'''
+	Driver code to write Older and PreK data into their respective workbooks and sheets
+
+	Args:
+		days: a tuple array representing the days and whole program
+			totals for each day. Format is (day, total)
+		olderTotals: int array representing the older group's totals for each day
+		preKTotals: int array representing the preK group's totals for each day
+		olderGroup: a 2D array of older group kids and days they're planning to show
+			up (represented by a 1 or 0). This array is in the format: [name, 1, 0, 1]
+		preKGroup: same as `olderGroup`, but for preK kids
+		sundayDate: a string of the format mm/dd/yy, representing the week's sunday date
+	'''
+	# copy files for template
 	shutil.copy("CHILD HEADCOUNT TEMP.xlsx", "Older.xlsx")
 	shutil.copy("CHILD HEADCOUNT TEMP.xlsx", "PreK.xlsx")
 
@@ -103,6 +117,13 @@ def writeToSheets(days, olderTotals, preKTotals, olderGroup, preKGroup, sundayDa
 
 
 def getNextDay(prevDay, numDaysLater):
+	'''
+	Gets a date in mm/dd/yy string format.
+
+	Args:
+		prevDay: a string date in mm/dd/yy format, used as reference to get the next date
+		numDaysLater: an int representing the number of days from the prevDay you want to get
+	'''
 	prevDay = prevDay.split("/")
 
 	date = datetime.datetime(int(f"20{prevDay[2]}"), int(prevDay[0]), int(prevDay[1]))
@@ -116,8 +137,14 @@ def writeToSheet(days, totals, group, day, wb, sheetName):
 	Writes one day's worth of kids into 1 sheet, with formatting
 
 	Args:
+		days: a tuple array representing the days and whole program
+			totals for each day. Format is (day, total)
+		totals: int array representing the group's totals for each day
+		group: a 2D array of kids and the days they're planning to show
+			up (represented by a 1 or 0). This array is in the format: [name, 1, 0, 1]
 		day: an int representing the index of the day that the sheet is detailing
-		wb: the Workbook object, used for writing to a sheet
+		wb: the Workbook object, used for writing to an excel file
+		sheetName: title of the sheet, to differentiate older/preK groups
 	'''
 	target = wb['Sheet1']
 	wb.copy_worksheet(target)
@@ -172,9 +199,10 @@ def writeToSheet(days, totals, group, day, wb, sheetName):
 
 def getTime(i):
 	'''
-	helper function to get a string representing a time increment
+	Helper function to get a string representing a time increment.
+	Used for writing to the "Time" column in the spreadsheet
 
-	args:
+	Args:
 		i: an int representing the row being written to
 	'''
 	if i < 29:
@@ -199,7 +227,8 @@ def getTime(i):
 
 def printDailyKids(totals, group):
 	'''
-	For either the preK or older group, prints kids attending for each day
+	For either the preK or older group, prints kids attending for each day.
+	Helper function used for quick code verifications.
 
 	Args:
 		totals: an array representing the days and total kids. Needed for the days
@@ -216,6 +245,14 @@ def printDailyKids(totals, group):
 
 
 def printAll(totals, group):
+	'''
+	Prints everything.
+	Helper function used for quick code verifications.
+
+	Args:
+		totals: an array representing the days and total kids. Needed for the days
+		group: an array representing all the kids in either the pre k or older group
+	'''
 	print("Names", end ="\t\t")
 	for i in range(len(totals)):
 		print(totals[i][0], end ="\t")
