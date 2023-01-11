@@ -25,6 +25,8 @@ To run the code, you must first install some libraries that the code relies on. 
 
 `pip install numpy`
 
+`pip install pillow`
+
 If you are using the newer version of Python (Python 3), replace `pip` with `pip3`.
 
 

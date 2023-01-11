@@ -1,16 +1,9 @@
 import openpyxl
-from openpyxl.styles import Font
-from openpyxl.styles import Alignment
-import numpy as np
+from openpyxl import load_workbook
 import datetime
 import shutil
 import string
 
-
-
-
-# TODO list:
-# add formatting to each cell
 
 
 def readData():
@@ -70,27 +63,20 @@ def readData():
 		if int(olderTotals[i]) + int(preKTotals[i]) != int(totals[i][1]):
 			print("The totals are wrong for", totals[i][0])
 
-	writeToSheets(totals, olderGroup, preKGroup, startDate)
+	writeToSheets(totals, olderTotals, preKTotals, olderGroup, preKGroup, startDate)
 
 
-def writeToSheets(totals, olderGroup, preKGroup, sundayDate):
-	# TODO: make copy of spreadsheet with formatting
-	# I can't figure out how to make multiple sheets with the same formatting so can't use this
-	# rb = open_workbook("names.xls")
-	# wb = copy(rb)
+def writeToSheets(days, olderTotals, preKTotals, olderGroup, preKGroup, sundayDate):
+	# copy files for templace
+	shutil.copy("CHILD HEADCOUNT TEMP.xlsx", "Older.xlsx")
+	shutil.copy("CHILD HEADCOUNT TEMP.xlsx", "PreK.xlsx")
 
-	# s = wb.get_sheet(0)
-	# s.write(0,0,'A1')
-	# wb.save('names.xls')
-	
+	wbOlder = load_workbook('Older.xlsx')
+	wbPreK = load_workbook('PreK.xlsx')
 
-	# FORMAT AS YOU GO
-	# do each day for older and pre-k kids separately
-	wbOlder = openpyxl.Workbook()
-	wbPreK = openpyxl.Workbook()
 
 	# get the dates of each of the days for the headcount sheets
-	for day in totals:
+	for day in days:
 		if day[0] == "Monday":
 			day.append(getNextDay(sundayDate, 1))
 		elif day[0] == "Tuesday":
@@ -103,13 +89,16 @@ def writeToSheets(totals, olderGroup, preKGroup, sundayDate):
 			day.append(getNextDay(sundayDate, 5))
 
 
-	for i in range(len(totals)):
-		# TODO: if i == 0, use the current sheet. else, make a new sheet
-		writeToSheet(totals, olderGroup, i, wbOlder, "OlderGroup")
-		writeToSheet(totals, preKGroup, i, wbPreK, "PreKGroup")
+	for i in range(len(days)):
+		writeToSheet(days, olderTotals, olderGroup, i, wbOlder, "OlderGroup")
+		writeToSheet(days, preKTotals, preKGroup, i, wbPreK, "PreKGroup")
 
-	wbOlder.save('OlderGroup.xlsx')
-	wbPreK.save('PreKGroup.xlsx')
+	# delete the first sheet in each one
+	wbOlder.remove(wbOlder['Sheet1'])
+	wbPreK.remove(wbPreK['Sheet1'])
+
+	wbOlder.save('Older.xlsx')
+	wbPreK.save('PreK.xlsx')
 
 
 
@@ -122,7 +111,7 @@ def getNextDay(prevDay, numDaysLater):
 
 
 
-def writeToSheet(totals, group, day, wb, sheetName):
+def writeToSheet(days, totals, group, day, wb, sheetName):
 	'''
 	Writes one day's worth of kids into 1 sheet, with formatting
 
@@ -130,84 +119,52 @@ def writeToSheet(totals, group, day, wb, sheetName):
 		day: an int representing the index of the day that the sheet is detailing
 		wb: the Workbook object, used for writing to a sheet
 	'''
-	sheet1 = wb.create_sheet(f'{sheetName}_{totals[day][0]}')
+	target = wb['Sheet1']
+	wb.copy_worksheet(target)
+	sheet1 = wb.worksheets[-1]
+	sheet1.title = f'{sheetName}_{days[day][0]}'
 
-	styleCells(sheet1, totals, day)
+	# add date and week day
+	sheet1["H4"] = days[day][0]
+	sheet1["O6"] = days[day][2]
+	sheet1["J4"] = f"Total: {totals[day]}"
+
+	# add champions logo
+	my_png = openpyxl.drawing.image.Image('logo.png')
+	my_png.height = 110
+	my_png.width = 233
+	sheet1.add_image(my_png, 'B1')
 
 	i = 9
-	for kid in group:
+	for j, kid in enumerate(group):
 		if kid[day+1] == "1":
-			# write time block in
-			# sheet1.write(i, 1, getTime(i-5))
-			sheet1[f'B{i}'] = getTime(i-5)
-
-			# write counter number in
-			# sheet1.write(i, 5, i-7)
-			sheet1[f'F{i}'] = i-8
-
 			# write kid names in
-			# sheet1.write(i, 6, kid[0])
 			sheet1[f'G{i}'] = kid[0]
-
 			i += 1
 
+		if i > 34:
+			j += 1
+			# start new sheet
+			wb.copy_worksheet(target)
+			sheet2 = wb.worksheets[-1]
+			sheet2.title = f'{sheetName}_{days[day][0]}_2'
 
+			# add date and week day
+			sheet2["H4"] = days[day][0]
+			sheet2["O6"] = days[day][2]
 
-def styleCells(sheet1, totals, day):
-	'''
-	Sets column/row sizes, fills out header sections, bolds header cells
-	'''
-	# change cell sizes for the sheet
-	sheet1.column_dimensions['A'].width = 2
-	sheet1.column_dimensions['B'].width = 10
-	sheet1.column_dimensions['C'].width = 7
-	sheet1.column_dimensions['D'].width = 10
-	sheet1.column_dimensions['E'].width = 18
-	sheet1.column_dimensions['F'].width = 3
-	sheet1.column_dimensions['G'].width = 17
-	sheet1.column_dimensions['H'].width = 13
-	sheet1.column_dimensions['I'].width = 11
-	sheet1.column_dimensions['J'].width = 11
-	sheet1.column_dimensions['K'].width = 11
-	sheet1.column_dimensions['L'].width = 11
-	sheet1.column_dimensions['M'].width = 11
-	sheet1.column_dimensions['N'].width = 11
-	sheet1.column_dimensions['O'].width = 11
-	sheet1.column_dimensions['P'].width = 15
-	sheet1.row_dimensions[5].height = 5
-	sheet1.row_dimensions[7].height = 5
-	sheet1.row_dimensions[8].height = 50
+			# add champions logo
+			my_png = openpyxl.drawing.image.Image('logo.png')
+			my_png.height = 110
+			my_png.width = 233
+			sheet2.add_image(my_png, 'B1')
 
-	# title/info
-	sheet1['I4'] = totals[day][0]
-	sheet1['I6'] = "Site Name: Eliot Upper"
-	sheet1['L6'] = "Site Number: 1638"
-	sheet1['P6'] = f"Date: {totals[day][2]}"
-
-	# row 1
-	sheet1['B8'] = "TIME"
-	sheet1['C8'] = "# OF STAFF"
-	sheet1['D8'] = "# OF STUDENTS"
-	sheet1['E8'] = "STAFF SIGNATURE (person conducting head count)"
-	sheet1['G8'] = "CHILD'S FULL NAME (Last Name, First Name)"
-	sheet1['H8'] = "ARRIVAL TIME"
-	sheet1['I8'] = "TIME OUT"
-	sheet1['J8'] = "LOCATION"
-	sheet1['K8'] = "TIME IN"
-	sheet1['L8'] = "TIME OUT"
-	sheet1['M8'] = "LOCATION"
-	sheet1['N8'] = "TIME IN"
-	sheet1['O8'] = "FINAL DEPARTURE TIME"
-
-	# bold everything for the header
-	for i in range(len(string.ascii_uppercase))[1:16]:
-		sheet1[f'{string.ascii_uppercase[i]}8'].font = Font(bold=True)
-		sheet1[f'{string.ascii_uppercase[i]}8'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-
-	sheet1['N2'] = "Child Head Count"
-	sheet1['N2'].font = Font(bold=True, size=22)
-	sheet1['N2'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-	sheet1.merge_cells('N2:P3')
+			for kiddo in group[j::]:
+				if kiddo[day+1] == "1":
+					# write kid names in
+					sheet2[f'G{i-26}'] = kiddo[0]
+					i += 1
+			break
 
 
 
@@ -271,15 +228,8 @@ def printAll(totals, group):
 
 
 
-def readDataNp():
-	'''
-	Reads in a text file, parses it into numpy arrays
-	'''
-	pass
-
-
-
 readData()
+
 
 
 
