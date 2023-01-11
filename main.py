@@ -68,7 +68,7 @@ def verify_totals(totals, olderTotals, preKTotals):
 	'''
 	for i in range(len(totals)):
 		if int(olderTotals[i]) + int(preKTotals[i]) != int(totals[i][1]):
-			raise Exception("The totals are wrong for", totals[i][0])
+			raise Exception(f"The totals are wrong for {totals[i][0]}")
 
 
 def get_groups(lines):
@@ -161,6 +161,9 @@ def get_next_day(prevDay, numDaysLater):
 		prevDay: a string date in mm/dd/yy format, used as reference to get the next date
 		numDaysLater: an int representing the number of days from the prevDay you want to get
 	'''
+	if numDaysLater < 0 or not isinstance(numDaysLater, int):
+		raise Exception("Second arg must be a non-negative integer")
+
 	prevDay = prevDay.split("/")
 
 	date = datetime.datetime(int(f"20{prevDay[2]}"), int(prevDay[0]), int(prevDay[1]))
