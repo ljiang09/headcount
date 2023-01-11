@@ -6,12 +6,16 @@ import string
 
 
 
-def readData():
+def read_data(fileName):
 	'''
 	Reads in a text file, parses it into regular 2x2 array
+
+	Args:
+		fileName: a string representing the file where all data is copied into.
+			Ex: 'headcount_data.txt'
 	'''
 	lines = []
-	with open('headcount_data.txt') as f:
+	with open(fileName) as f:
 		lines = f.readlines()
 
 	# get sunday date info
@@ -19,14 +23,7 @@ def readData():
 	lines = lines[2::]
 
 	# get totals info
-	totals = []
-	i = 0
-	while "===" not in lines[i]:
-		day = lines[i].strip()
-		day = day.split(": ")
-		totals.append(day)
-		i += 1
-
+	(totals, i) = get_totals_info(lines)
 	lines = lines[i+1::]
 
 	olderGroup = []
@@ -58,13 +55,45 @@ def readData():
 				preKGroup.append(line)
 				i += 1
 
-	# some counting verification stuff here
+	verify_totals(totals, olderTotals, preKTotals)
+
+	writeToSheets(totals, olderTotals, preKTotals, olderGroup, preKGroup, startDate)
+
+
+
+def get_totals_info(lines):
+	'''
+	Helper function to get the program totals out of the text file,
+	store it, and remove the line from the list of text lines
+
+	Args:
+		lines: an array representing the lines of the text file
+	'''
+	totals = []
+	i = 0
+	while "===" not in lines[i]:
+		day = lines[i].strip()
+		day = day.split(": ")
+		totals.append(day)
+		i += 1
+	return (totals, i)
+
+
+
+def verify_totals(totals, olderTotals, preKTotals):
+	'''
+	Checks that the totals add up properly
+
+	Args:
+		totals: a (string, int) array representing the number of kids present
+			in the overall program each day
+		olderTotals: an int array representing the total #older kids each day
+		preKTotals: an int array representing the total #preK kids each day
+	'''
 	for i in range(len(totals)):
 		if int(olderTotals[i]) + int(preKTotals[i]) != int(totals[i][1]):
-			print("The totals are wrong for", totals[i][0])
+			raise Exception("The totals are wrong for", totals[i][0])
 
-	print(olderGroup)
-	writeToSheets(totals, olderTotals, preKTotals, olderGroup, preKGroup, startDate)
 
 
 def writeToSheets(days, olderTotals, preKTotals, olderGroup, preKGroup, sundayDate):
@@ -265,7 +294,7 @@ def printAll(totals, group):
 
 
 
-readData()
+read_data('headcount_data.txt')
 
 
 
