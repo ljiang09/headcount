@@ -4,6 +4,7 @@ Unit tests
 
 import pytest
 
+from main import get_totals_info, verify_totals, get_groups, get_next_day
 
 # (lines, expected)
 get_totals_data = [
@@ -33,11 +34,18 @@ get_groups_data = [
 			['17', '18', '13']
 		)
 	),
-	(['A_last, A_first \t1\t1', 'B_last, B_first \t1\t1\n', 'C_last, C_first \t1\t1', 'D_last, D_first \t1\t1', 'E_last, E_first \t1\t1', 'blah blah Total\t5\t5\n', 'A_last, A_first \t0\t1', 'B_last, B_first \t0\t0', 'C_last, C_first \t0\t1', 'total total total Total\t0\t2\n'],
+	(['A_last, A_first\t1\t1\n', 'B_last, B_first\t1\t1\n', 'C_last, C_first\t1\t1\n', 'D_last, D_first\t1\t1', 'E_last, E_first\t1\t1', 'After School Total\t5\t5\n', 'Champions Total\t5\t5\n', 'Pre-Kindergarten\t\t\t\n', 'After School\t \t \t \n', 'A_last, A_first\t0\t1', 'B_last, B_first\t0\t0', 'C_last, C_first\t0\t1', 'total total total Total\t0\t2\n'],
 		([['A_last, A_first', '1', '1'], ['B_last, B_first', '1', '1'], ['C_last, C_first', '1', '1'], ['D_last, D_first', '1', '1'], ['E_last, E_first', '1', '1']],
 			[['A_last, A_first', '0', '1'], ['B_last, B_first', '0', '0'], ['C_last, C_first', '0', '1']],
 			['5', '5'],
 			['0', '2']
+		)
+	),
+	(['A_last, A_first\t1\n', 'B_last, B_first\t1\n', 'C_last, C_first\t1\n', 'D_last, D_first\t1', 'E_last, E_first\t1', 'Total\t5\n', '', '', '', 'A_last, A_first\t0', 'B_last, B_first\t0', 'C_last, C_first\t0', 'total total total Total\t0\n'],
+		([['A_last, A_first', '1'], ['B_last, B_first', '1'], ['C_last, C_first', '1'], ['D_last, D_first', '1'], ['E_last, E_first', '1']],
+			[['A_last, A_first', '0'], ['B_last, B_first', '0'], ['C_last, C_first', '0']],
+			['5'],
+			['0']
 		)
 	)
 ]
@@ -87,6 +95,6 @@ def test_get_groups(lines, expected):
 
 
 @pytest.mark.parametrize("prevDay, numDaysLater, expected", get_next_day_data)
-def test_get_next_day():
+def test_get_next_day(prevDay, numDaysLater, expected):
 	assert get_next_day(prevDay, numDaysLater) == expected
 
