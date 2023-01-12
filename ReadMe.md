@@ -10,6 +10,7 @@ The script can fill out all the sheets for 1 week. It generates two files: one f
 2. Install dependencies
 3. Replace text file contents
 4. Run Python script
+5. Optional: run unit tests
 
 
 ## Download project:
@@ -46,4 +47,9 @@ If you need an example of how to format the entire file, look at [`example_data_
 ## Run Python script
 
 Now, you can finally run the python script and generate Excel files for each day. In the command line, navigate to the folder where this ReadMe file is stored. Then, type either `python main.py` or `python3 main.py`, press enter, and see the newly-generated Excel sheets!
+
+
+## Optional: run unit tests
+
+I've written tests to check that the script is functioning as intended. If you want to, you can run these yourself! You'll need to install `pytest`, then in the command line, run the command `pytest`. You should then see all the functions being tested, and which ones pass or fail.
 

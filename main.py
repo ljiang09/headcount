@@ -275,7 +275,7 @@ def printAll(totals, group):
 
 
 
-read_data('headcount_data.txt')
+read_data('example_data_format.txt')
 
 
 
