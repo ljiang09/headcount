@@ -20,13 +20,9 @@ Go to [https://github.com/ljiang09/headcount](https://github.com/ljiang09/headco
 
 ## Install dependencies:
 
-To run the code, you must first install some libraries that the code relies on. In the command line, run the following commands:
+You must first install the `openpyxl` dependency that the code relies on. In the command line, run the following command:
 
-`pip install xlwt`
-
-`pip install numpy`
-
-`pip install pillow`
+`pip install openpyxl`
 
 If you are using the newer version of Python (Python 3), replace `pip` with `pip3`.
 
